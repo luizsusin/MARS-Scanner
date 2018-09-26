@@ -123,7 +123,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 		btnOpenFile.setBounds(116, 42, 158, 23);
 		contentPane.add(btnOpenFile);
 
-		JCheckBox chkInvert = new JCheckBox("Inverter Scan (Mark point when RGB > 245)");
+		JCheckBox chkInvert = new JCheckBox("Inverse Scan (Mark point when RGB > 245)");
 		chkInvert.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		chkInvert.setHorizontalAlignment(SwingConstants.CENTER);
 		chkInvert.setBounds(10, 167, 264, 23);

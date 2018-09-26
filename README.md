@@ -14,6 +14,15 @@ To use MARS Scanner, you must have:
 ```
 All the binaries released can be found at the page [releases](https://github.com/luizsusin/MARS-Scanner/releases).
 
+### Updating from previous version
+
+In case you're updating from an older version, follow these instructions:
+1. Open the MARS 4.5 (or newer) jar file using your jar file viewer;
+2. Access mars/tools and delete the folder marsscanner;
+3. Go back to the root folder of the jar file;
+4. Open the binaries using any zip file viewer;
+5. Copy the contents of the binaries zip file inside the MARS jar file.
+
 ### Installing
 
 To install MARS Scanner, you must:
