@@ -1,4 +1,4 @@
-package mars.tools.marsscanner.orientation;
+package mars.tools.marsscanner.util;
 
 public class Orientation 
 {

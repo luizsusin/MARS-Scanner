@@ -32,7 +32,7 @@ import javax.swing.text.NumberFormatter;
 import mars.Globals;
 import mars.mips.hardware.AddressErrorException;
 import mars.tools.MARSScanner;
-import mars.tools.marsscanner.orientation.Orientation;
+import mars.tools.marsscanner.util.Orientation;
 
 @SuppressWarnings("serial")
 public class ScannerRunnable extends JFrame implements Runnable
