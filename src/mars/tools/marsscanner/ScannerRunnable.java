@@ -32,8 +32,7 @@ import javax.swing.text.NumberFormatter;
 import mars.Globals;
 import mars.mips.hardware.AddressErrorException;
 import mars.tools.MARSScanner;
-import mars.tools.marsscanner.orientation.HorizontalOrientation;
-import mars.tools.marsscanner.orientation.VerticalOrientation;
+import mars.tools.marsscanner.orientation.Orientation;
 
 @SuppressWarnings("serial")
 public class ScannerRunnable extends JFrame implements Runnable
@@ -144,19 +143,19 @@ public class ScannerRunnable extends JFrame implements Runnable
 		JComboBox<String> verticalAligment = new JComboBox<String>();
 		verticalAligment.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		verticalAligment.setBounds(139, 118, 135, 20);
-		verticalAligment.addItem(VerticalOrientation.CIMA);
-		verticalAligment.addItem(VerticalOrientation.CENTRO);
-		verticalAligment.addItem(VerticalOrientation.BAIXO);
-		verticalAligment.setSelectedItem(VerticalOrientation.CENTRO);
+		verticalAligment.addItem(Orientation.VerticalOrientation.CIMA);
+		verticalAligment.addItem(Orientation.VerticalOrientation.CENTRO);
+		verticalAligment.addItem(Orientation.VerticalOrientation.BAIXO);
+		verticalAligment.setSelectedItem(Orientation.VerticalOrientation.CENTRO);
 		contentPane.add(verticalAligment);
 		
 		JComboBox<String> horizontalAligment = new JComboBox<String>();
 		horizontalAligment.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		horizontalAligment.setBounds(139, 143, 135, 20);
-		horizontalAligment.addItem(HorizontalOrientation.ESQUERDA);
-		horizontalAligment.addItem(HorizontalOrientation.CENTRO);
-		horizontalAligment.addItem(HorizontalOrientation.DIREITA);
-		horizontalAligment.setSelectedItem(HorizontalOrientation.CENTRO);
+		horizontalAligment.addItem(Orientation.HorizontalOrientation.ESQUERDA);
+		horizontalAligment.addItem(Orientation.HorizontalOrientation.CENTRO);
+		horizontalAligment.addItem(Orientation.HorizontalOrientation.DIREITA);
+		horizontalAligment.setSelectedItem(Orientation.HorizontalOrientation.CENTRO);
 		contentPane.add(horizontalAligment);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -223,16 +222,16 @@ public class ScannerRunnable extends JFrame implements Runnable
             	{
 	            	int coefAligX = 1, coefAligY = 0;
 	            	
-	            	if(horizontalAligment.getSelectedItem().equals(HorizontalOrientation.CENTRO))
+	            	if(horizontalAligment.getSelectedItem().equals(Orientation.HorizontalOrientation.CENTRO))
 	            		coefAligX = (Integer.valueOf(horizontalSize.getText()) - image.getWidth()) / 2;
 	            	
-	            	if(horizontalAligment.getSelectedItem().equals(HorizontalOrientation.DIREITA))
+	            	if(horizontalAligment.getSelectedItem().equals(Orientation.HorizontalOrientation.DIREITA))
 	            		coefAligX = Integer.valueOf(horizontalSize.getText()) - image.getWidth();
 	            	
-	            	if(verticalAligment.getSelectedItem().equals(VerticalOrientation.BAIXO))
+	            	if(verticalAligment.getSelectedItem().equals(Orientation.VerticalOrientation.BAIXO))
 	            		coefAligY = Integer.valueOf(verticalSize.getText()) - image.getHeight();
 	            	
-	            	if(verticalAligment.getSelectedItem().equals(VerticalOrientation.CENTRO))
+	            	if(verticalAligment.getSelectedItem().equals(Orientation.VerticalOrientation.CENTRO))
 	            		coefAligY = (Integer.valueOf(verticalSize.getText()) - image.getHeight()) / 2;
 	            	
 	            	for(int y = 0; y < image.getHeight(); y++)
