@@ -249,7 +249,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 
 				if (image != null) 
 				{
-					int coefAligX = 1, coefAligY = 0;
+					int coefAligX = 0, coefAligY = 0;
 
 					if (horizontalAligment.getSelectedItem().equals(Orientation.HorizontalOrientation.CENTER))
 						coefAligX = (Integer.valueOf(horizontalSize.getText()) - image.getWidth()) / 2;
@@ -308,8 +308,6 @@ public class ScannerRunnable extends JFrame implements Runnable
 
 					try 
 					{
-						Globals.memory.setWord(MARSScanner.ADDR_STARTX, coefAligX);
-
 						Globals.memory.setWord(MARSScanner.ADDR_NEXTX, tracePoints.get(0).x);
 						Globals.memory.setWord(MARSScanner.ADDR_NEXTY, tracePoints.get(0).y);
 

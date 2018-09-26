@@ -39,18 +39,15 @@ public class MARSScanner implements MarsTool, Observer
 	/** Start Address used on MMIO */
 	private static final int ADDR_STARTRANGE = 0xffff9000;
 	/** Final Address used on MMIO */
-	private static final int ADDR_ENDRANGE = 0xffff9030;
+	private static final int ADDR_ENDRANGE = 0xffff9020;
 
 	/** Address used to pop a point from the list */
 	public static final int ADDR_JUMPVALUE = 0xffff9000;
 
-	/** Address used to get the start point on X axis */
-	public static final int ADDR_STARTX = 0xffff9010;
-
 	/** Address used to get the point to mark on X axis */
-	public static final int ADDR_NEXTX = 0xffff9020;
+	public static final int ADDR_NEXTX = 0xffff9010;
 	/** Address used to get the point to mark on Y axis */
-	public static final int ADDR_NEXTY = 0xffff9030;
+	public static final int ADDR_NEXTY = 0xffff9020;
 
 	public static ScannerRunnable sInstance;
 
