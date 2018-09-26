@@ -202,7 +202,7 @@ public class MARSScanner implements MarsTool, Observer
 	public static ScannerRunnable sInstance;
 	
 	/**
-	 * @return The name of the Tool 
+	 * @return The name of the tool 
 	 * */
 	@Override
 	public String getName() 
