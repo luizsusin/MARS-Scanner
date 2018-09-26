@@ -205,28 +205,32 @@ import mars.tools.marsscanner.util.Orientation;
  * @author Luiz H. Susin
  * @date 14/09/2018
  * @time 12:51 AM
- * */
-public class ScannerRunnable extends JFrame implements Runnable
+ */
+public class ScannerRunnable extends JFrame implements Runnable 
 {
 	private static final long serialVersionUID = 2512752452188107581L;
-	
+
+	/** Default MARS Bot workspace width */
 	private static final int GRAPHIC_WIDTH = 696;
-    private static final int GRAPHIC_HEIGHT = 512;
-    
-    private JPanel contentPane;
-	
+	/** Default MARS Bot workspace height */
+	private static final int GRAPHIC_HEIGHT = 512;
+
+	private JPanel contentPane;
+
 	private static JFormattedTextField verticalSize;
-    private static JFormattedTextField horizontalSize;
-    
-    private static File imageFile = null;
-    private static BufferedImage image = null;
-    private static List<Point> tracePoints = new ArrayList<Point>();
-    
-    private static ScannerRunnable instance;
+	private static JFormattedTextField horizontalSize;
+
+	private static File imageFile = null;
+	private static BufferedImage image = null;
 	
-    /**
-     * The frame and image processor
-     * */
+	/** Trace points list to send to MARS MMIO */
+	private static List<Point> tracePoints = new ArrayList<Point>();
+
+	private static ScannerRunnable instance;
+
+	/**
+	 * The frame and image processor
+	 */
 	public ScannerRunnable() throws Exception 
 	{
 		setTitle("MARS Scanner");
@@ -237,85 +241,85 @@ public class ScannerRunnable extends JFrame implements Runnable
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		instance = this;
-		
+
 		JLabel lblMarsScanner = new JLabel("MARS Scanner");
 		lblMarsScanner.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblMarsScanner.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMarsScanner.setBounds(10, 11, 264, 20);
 		contentPane.add(lblMarsScanner);
-		
+
 		JLabel lblLoadImage = new JLabel("Load image [.JPG]:");
 		lblLoadImage.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblLoadImage.setBounds(10, 46, 119, 14);
 		contentPane.add(lblLoadImage);
-		
+
 		JButton btnCalculateAndSend = new JButton("Calculate and Send");
 		btnCalculateAndSend.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnCalculateAndSend.setEnabled(false);
 		btnCalculateAndSend.setBounds(10, 197, 264, 23);
 		contentPane.add(btnCalculateAndSend);
-		
+
 		final JFileChooser fChooser = new JFileChooser();
 		fChooser.addChoosableFileFilter(new FileNameExtensionFilter("Arquivos de Imagem", "jpg", "jpeg", "jpe"));
 		fChooser.setAcceptAllFileFilterUsed(false);
-		
+
 		JButton btnOpenFile = new JButton("Open file");
 		btnOpenFile.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnOpenFile.setBounds(116, 42, 158, 23);
 		contentPane.add(btnOpenFile);
-		
+
 		JCheckBox chkInvert = new JCheckBox("Inverter Scan (Mark point when RGB > 245)");
 		chkInvert.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		chkInvert.setHorizontalAlignment(SwingConstants.CENTER);
 		chkInvert.setBounds(10, 167, 264, 23);
 		contentPane.add(chkInvert);
-		
+
 		JLabel lblHorizontalSize = new JLabel("Horizontal Size [X]:");
 		lblHorizontalSize.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblHorizontalSize.setBounds(10, 71, 119, 14);
 		contentPane.add(lblHorizontalSize);
-		
+
 		JLabel lblVerticalSize = new JLabel("Vertical Size [Y]:");
 		lblVerticalSize.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblVerticalSize.setBounds(10, 96, 119, 14);
 		contentPane.add(lblVerticalSize);
-		
+
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 35, 264, 5);
 		contentPane.add(separator);
-		
+
 		NumberFormat format = NumberFormat.getInstance();
-	    NumberFormatter formatter = new NumberFormatter(format);
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(0);
-	    formatter.setMaximum(Integer.MAX_VALUE);
-	    formatter.setAllowsInvalid(false);
-	    formatter.setCommitsOnValidEdit(true);
-		
-	    horizontalSize = new JFormattedTextField(formatter);
-	    horizontalSize.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		NumberFormatter formatter = new NumberFormatter(format);
+		formatter.setValueClass(Integer.class);
+		formatter.setMinimum(0);
+		formatter.setMaximum(Integer.MAX_VALUE);
+		formatter.setAllowsInvalid(false);
+		formatter.setCommitsOnValidEdit(true);
+
+		horizontalSize = new JFormattedTextField(formatter);
+		horizontalSize.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		horizontalSize.setBounds(116, 68, 158, 20);
 		horizontalSize.setText(String.valueOf(GRAPHIC_WIDTH));
 		contentPane.add(horizontalSize);
-		
-	    verticalSize = new JFormattedTextField(formatter);
-	    verticalSize.setFont(new Font("Tahoma", Font.PLAIN, 11));
-	    verticalSize.setBounds(116, 93, 158, 20);
-	    verticalSize.setText(String.valueOf(GRAPHIC_HEIGHT));
+
+		verticalSize = new JFormattedTextField(formatter);
+		verticalSize.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		verticalSize.setBounds(116, 93, 158, 20);
+		verticalSize.setText(String.valueOf(GRAPHIC_HEIGHT));
 		contentPane.add(verticalSize);
-		
+
 		JLabel lblVerticalAlignment = new JLabel("Vertical Alignment:");
 		lblVerticalAlignment.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblVerticalAlignment.setBounds(10, 121, 119, 14);
 		contentPane.add(lblVerticalAlignment);
-		
+
 		JLabel lblHorizontalAlignment = new JLabel("Horizontal Alignment:");
 		lblHorizontalAlignment.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblHorizontalAlignment.setBounds(10, 146, 119, 14);
 		contentPane.add(lblHorizontalAlignment);
-		
+
 		JComboBox<String> verticalAligment = new JComboBox<String>();
 		verticalAligment.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		verticalAligment.setBounds(116, 118, 158, 20);
@@ -324,7 +328,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 		verticalAligment.addItem(Orientation.VerticalOrientation.DOWN);
 		verticalAligment.setSelectedItem(Orientation.VerticalOrientation.CENTER);
 		contentPane.add(verticalAligment);
-		
+
 		JComboBox<String> horizontalAligment = new JComboBox<String>();
 		horizontalAligment.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		horizontalAligment.setBounds(116, 143, 158, 20);
@@ -333,157 +337,153 @@ public class ScannerRunnable extends JFrame implements Runnable
 		horizontalAligment.addItem(Orientation.HorizontalOrientation.RIGHT);
 		horizontalAligment.setSelectedItem(Orientation.HorizontalOrientation.CENTER);
 		contentPane.add(horizontalAligment);
-		
+
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setForeground(Color.GRAY);
 		separator_1.setBounds(0, 228, 290, 5);
 		contentPane.add(separator_1);
-		
+
 		JLabel lblMarsScannerCredits = new JLabel("MARS Scanner for MARS Bot");
 		lblMarsScannerCredits.setForeground(Color.BLACK);
 		lblMarsScannerCredits.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMarsScannerCredits.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
 		lblMarsScannerCredits.setBounds(10, 233, 264, 14);
 		contentPane.add(lblMarsScannerCredits);
-		
+
 		JLabel lblCredits = new JLabel("Developed by Luiz H. Susin (@luizsusin)");
 		lblCredits.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblCredits.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCredits.setBounds(10, 248, 264, 14);
 		contentPane.add(lblCredits);
-		
+
 		btnOpenFile.addActionListener(new ActionListener() 
 		{
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            	int returnVal = fChooser.showOpenDialog(instance);
-            	
-            	if(returnVal == JFileChooser.APPROVE_OPTION)
-            	{
-            		try 
-            		{
-            			if(ImageIO.read(fChooser.getSelectedFile()).getWidth() <= Integer.valueOf(horizontalSize.getText())
-						&& ImageIO.read(fChooser.getSelectedFile()).getHeight() <= Integer.valueOf(verticalSize.getText()))
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				int returnVal = fChooser.showOpenDialog(instance);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) 
+				{
+					try 
+					{
+						if (ImageIO.read(fChooser.getSelectedFile()).getWidth() <= Integer.valueOf(horizontalSize.getText())
+						&& ImageIO.read(fChooser.getSelectedFile()).getHeight() <= Integer.valueOf(verticalSize.getText())) 
 						{
 							imageFile = fChooser.getSelectedFile();
-            				
+
 							btnOpenFile.setText(imageFile.getName());
 							btnCalculateAndSend.setEnabled(true);
 							btnCalculateAndSend.setText("Calculate and Send");
-						}
+						} 
 						else JOptionPane.showMessageDialog(null, "The image is bigger than the workspace.", "Error", JOptionPane.ERROR_MESSAGE);
 					} 
-            		catch (Exception e1) { e1.printStackTrace(); }
-            	}
-            }
-        });
-		
+					catch (Exception e1) { e1.printStackTrace(); }
+				}
+			}
+		});
+
 		btnCalculateAndSend.addActionListener(new ActionListener() 
 		{
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            	btnCalculateAndSend.setText("Calculating...");
-            	tracePoints.clear();
-            	
-            	try { image = ImageIO.read(imageFile); } 
-            	catch (IOException e1) { e1.printStackTrace(); }
-            	
-            	if(image != null)
-            	{
-	            	int coefAligX = 1, coefAligY = 0;
-	            	
-	            	if(horizontalAligment.getSelectedItem().equals(Orientation.HorizontalOrientation.CENTER))
-	            		coefAligX = (Integer.valueOf(horizontalSize.getText()) - image.getWidth()) / 2;
-	            	
-	            	if(horizontalAligment.getSelectedItem().equals(Orientation.HorizontalOrientation.RIGHT))
-	            		coefAligX = Integer.valueOf(horizontalSize.getText()) - image.getWidth();
-	            	
-	            	if(verticalAligment.getSelectedItem().equals(Orientation.VerticalOrientation.DOWN))
-	            		coefAligY = Integer.valueOf(verticalSize.getText()) - image.getHeight();
-	            	
-	            	if(verticalAligment.getSelectedItem().equals(Orientation.VerticalOrientation.CENTER))
-	            		coefAligY = (Integer.valueOf(verticalSize.getText()) - image.getHeight()) / 2;
-	            	
-	            	for(int y = 0; y < image.getHeight(); y++)
-	            	{
-	            		for(int x = 0; x < image.getWidth(); x++)
-	            		{
-	            			Color cPx = new Color(image.getRGB(x,y)); 
-	            		
-	            			if(chkInvert.isSelected())
-	            			{
-	            				if(cPx.getBlue() >= 245 && cPx.getGreen() >= 245 && cPx.getRed() >= 245)
-	            					tracePoints.add(new Point(x + coefAligX, y + coefAligY));
-	            			}
-	            			else
-	            			{
-	            				if(cPx.getBlue() < 245 && cPx.getGreen() < 245 && cPx.getRed() < 245)
-	            					tracePoints.add(new Point(x + coefAligX, y + coefAligY));
-	            			}
-	            		}
-	            		
-	            		if(y + 1 < image.getHeight())
-	            		{
-		            		y++;
-		            		
-		            		for(int x = image.getWidth() - 1; x >= 0; x--)
-		            		{
-		            			Color cPx = new Color(image.getRGB(x,y)); 
-		            		
-		            			if(chkInvert.isSelected())
-		            			{
-		            				if(cPx.getBlue() >= 245 && cPx.getGreen() >= 245 && cPx.getRed() >= 245)
-		            					tracePoints.add(new Point(x + coefAligX, y + coefAligY));
-		            			}
-		            			else
-		            			{
-		            				if(cPx.getBlue() < 245 && cPx.getGreen() < 245 && cPx.getRed() < 245)
-		            					tracePoints.add(new Point(x + coefAligX, y + coefAligY));
-		            			}
-		            		}
-	            		}
-	            	}
-	            	
-	            	tracePoints.add(new Point(-1, -1));
-	            	
-	            	btnCalculateAndSend.setText("Enviando...");
-	            	
-	            	try 
-	            	{
-	            		Globals.memory.setWord(MARSScanner.ADDR_STARTX, coefAligX);
-	            		
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				btnCalculateAndSend.setText("Calculating...");
+				tracePoints.clear();
+
+				try { image = ImageIO.read(imageFile); } 
+				catch (IOException e1) { e1.printStackTrace(); }
+
+				if (image != null) 
+				{
+					int coefAligX = 1, coefAligY = 0;
+
+					if (horizontalAligment.getSelectedItem().equals(Orientation.HorizontalOrientation.CENTER))
+						coefAligX = (Integer.valueOf(horizontalSize.getText()) - image.getWidth()) / 2;
+
+					if (horizontalAligment.getSelectedItem().equals(Orientation.HorizontalOrientation.RIGHT))
+						coefAligX = Integer.valueOf(horizontalSize.getText()) - image.getWidth();
+
+					if (verticalAligment.getSelectedItem().equals(Orientation.VerticalOrientation.DOWN))
+						coefAligY = Integer.valueOf(verticalSize.getText()) - image.getHeight();
+
+					if (verticalAligment.getSelectedItem().equals(Orientation.VerticalOrientation.CENTER))
+						coefAligY = (Integer.valueOf(verticalSize.getText()) - image.getHeight()) / 2;
+
+					for (int y = 0; y < image.getHeight(); y++) 
+					{
+						for (int x = 0; x < image.getWidth(); x++) 
+						{
+							Color cPx = new Color(image.getRGB(x, y));
+
+							if (chkInvert.isSelected()) 
+							{
+								if (cPx.getBlue() >= 245 && cPx.getGreen() >= 245 && cPx.getRed() >= 245)
+									tracePoints.add(new Point(x + coefAligX, y + coefAligY));
+							} 
+							else 
+							{
+								if (cPx.getBlue() < 245 && cPx.getGreen() < 245 && cPx.getRed() < 245)
+									tracePoints.add(new Point(x + coefAligX, y + coefAligY));
+							}
+						}
+
+						if (y + 1 < image.getHeight()) 
+						{
+							y++;
+
+							for (int x = image.getWidth() - 1; x >= 0; x--) 
+							{
+								Color cPx = new Color(image.getRGB(x, y));
+
+								if (chkInvert.isSelected()) 
+								{
+									if (cPx.getBlue() >= 245 && cPx.getGreen() >= 245 && cPx.getRed() >= 245)
+										tracePoints.add(new Point(x + coefAligX, y + coefAligY));
+								} else 
+								{
+									if (cPx.getBlue() < 245 && cPx.getGreen() < 245 && cPx.getRed() < 245)
+										tracePoints.add(new Point(x + coefAligX, y + coefAligY));
+								}
+							}
+						}
+					}
+
+					tracePoints.add(new Point(-1, -1));
+
+					btnCalculateAndSend.setText("Enviando...");
+
+					try 
+					{
+						Globals.memory.setWord(MARSScanner.ADDR_STARTX, coefAligX);
+
 						Globals.memory.setWord(MARSScanner.ADDR_NEXTX, tracePoints.get(0).x);
 						Globals.memory.setWord(MARSScanner.ADDR_NEXTY, tracePoints.get(0).y);
-						
+
 						tracePoints.remove(0);
 					} 
-	            	catch (AddressErrorException e1) { e1.printStackTrace(); }
-	            	
-	            	btnCalculateAndSend.setText("Recalcular e Reenviar");
-            	}
-            }
-        });
+					catch (AddressErrorException e1) { e1.printStackTrace(); }
+
+					btnCalculateAndSend.setText("Recalcular e Reenviar");
+				}
+			}
+		});
 	}
 
 	/**
 	 * Exhibit the instance frame
-	 * */
+	 */
 	@Override
 	public void run() 
 	{
-		try 
-		{ 
-			instance.setVisible(true);
-		} 
+		try { instance.setVisible(true); } 
 		catch (Exception e) { e.printStackTrace(); }
 	}
-	
+
 	/**
 	 * @return The Trace Point List with all the points scanned and marked
 	 */
-	public List<Point> getTracePoints()
+	public List<Point> getTracePoints() 
 	{
 		return tracePoints;
 	}
