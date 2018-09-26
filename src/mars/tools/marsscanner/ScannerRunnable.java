@@ -304,7 +304,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 
 					tracePoints.add(new Point(-1, -1));
 
-					btnCalculateAndSend.setText("Enviando...");
+					btnCalculateAndSend.setText("Sending...");
 
 					try 
 					{
@@ -317,7 +317,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 					} 
 					catch (AddressErrorException e1) { e1.printStackTrace(); }
 
-					btnCalculateAndSend.setText("Recalcular e Reenviar");
+					btnCalculateAndSend.setText("Recalculate e Resend");
 				}
 			}
 		});
