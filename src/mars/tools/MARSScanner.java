@@ -183,30 +183,36 @@ import mars.tools.marsscanner.ScannerRunnable;
  * */
 public class MARSScanner implements MarsTool, Observer
 {
+	/** Start Address used on MMIO */
 	private static final int ADDR_STARTRANGE = 0xffff9000;
-	private static final int ADDR_ENDRANGE   = 0xffff9080;
+	/** Final Address used on MMIO */
+	private static final int ADDR_ENDRANGE   = 0xffff9030;
 	
+	/** Address used to pop a point from the list */
 	public static final int ADDR_JUMPVALUE   = 0xffff9000;
 	
-	public static final int ADDR_STARTX      = 0xffff9020;
-	public static final int ADDR_STARTY      = 0xffff9040;
+	/** Address used to get the start point on X axis */
+	public static final int ADDR_STARTX      = 0xffff9010;
 	
-	public static final int ADDR_NEXTX       = 0xffff9060;
-	public static final int ADDR_NEXTY       = 0xffff9080;
+	/** Address used to get the point to mark on X axis */
+	public static final int ADDR_NEXTX       = 0xffff9020;
+	/** Address used to get the point to mark on Y axis */
+	public static final int ADDR_NEXTY       = 0xffff9030;
 	
 	public static ScannerRunnable sInstance;
 	
+	/**
+	 * @return The name of the Tool 
+	 * */
 	@Override
 	public String getName() 
     {
 		return "MARS Scanner";
 	}
-	
-	public String getVersion()
-	{
-		return "Rev 1.6";
-	}
 
+	/**
+	 * Exhibits the tool's interface and start monitoring the memory addresses 
+	 * */
 	@Override
 	public void action() 
 	{
@@ -223,6 +229,9 @@ public class MARSScanner implements MarsTool, Observer
 		catch (Exception e) { e.printStackTrace(); }
 	}
 
+	/**
+	 * Monitor the memory addresses and processes its requests on demand
+	 * */
 	public void update(Observable o, Object arg) 
 	{
 		if(arg instanceof MemoryAccessNotice)
