@@ -203,7 +203,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 		lblMarsScannerCredits.setBounds(10, 233, 264, 14);
 		contentPane.add(lblMarsScannerCredits);
 
-		JLabel lblCredits = new JLabel("Developed by Luiz H. Susin (@luizsusin)");
+		JLabel lblCredits = new JLabel("<html>Developed by Luiz H. Susin (<a href=\"https://github.com/luizsusin\" target=\"_blank\">@luizsusin</a>)</html>");
 		lblCredits.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblCredits.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCredits.setBounds(10, 248, 264, 16);
