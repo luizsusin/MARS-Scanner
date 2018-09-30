@@ -1,4 +1,4 @@
-# MARS Scanner
+# MARS Scanner Rev 1.0
 
 A [MARS](http://courses.missouristate.edu/KenVollmar/mars/) (MIPS Assembler and Runtime Simulator) tool to capture points on a JPEG image so that it can be transmitted through MMIO to the simulator. This data can be used to trace points using MARS Bot or to process image data using MIPS Assembly.
 

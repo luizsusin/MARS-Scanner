@@ -89,7 +89,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 		setTitle("MARS Scanner");
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		setBounds(100, 100, 290, 295);
+		setBounds(100, 100, 290, 297);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -196,7 +196,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 		separator_1.setBounds(0, 228, 290, 5);
 		contentPane.add(separator_1);
 
-		JLabel lblMarsScannerCredits = new JLabel("MARS Scanner for MARS Bot");
+		JLabel lblMarsScannerCredits = new JLabel("MARS Scanner [" + MARSScanner.getToolVersion() + "]");
 		lblMarsScannerCredits.setForeground(Color.BLACK);
 		lblMarsScannerCredits.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMarsScannerCredits.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
@@ -206,7 +206,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 		JLabel lblCredits = new JLabel("Developed by Luiz H. Susin (@luizsusin)");
 		lblCredits.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblCredits.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCredits.setBounds(10, 248, 264, 14);
+		lblCredits.setBounds(10, 248, 264, 16);
 		contentPane.add(lblCredits);
 
 		btnOpenFile.addActionListener(new ActionListener() 

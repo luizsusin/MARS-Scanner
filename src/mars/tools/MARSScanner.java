@@ -59,6 +59,14 @@ public class MARSScanner implements MarsTool, Observer
 	{
 		return "MARS Scanner";
 	}
+	
+	/**
+	 * @return The version of the tool
+	 */
+	public static String getToolVersion() 
+	{
+		return "Rev 1.0";
+	}
 
 	/**
 	 * Exhibits the tool's interface and start monitoring the memory addresses
