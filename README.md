@@ -36,7 +36,7 @@ And you're good to go!
 
 To use MARS Scanner, you must understand how MMIO (Memory Mapped I/O) works. In case you don't, I suggest you have some [reading](https://en.wikipedia.org/wiki/Memory-mapped_I/O) before proceeding.
 
-Once you understand how MMIO, take note of these informations:
+Once you understand how it works, take note of these informations:
 
 ### Addresses used by MARS Scanner
 
