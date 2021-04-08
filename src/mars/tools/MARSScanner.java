@@ -39,7 +39,7 @@ public class MARSScanner implements MarsTool, Observer
 	/** Start Address used on MMIO */
 	private static final int ADDR_STARTRANGE = 0xffff9000;
 	/** Final Address used on MMIO */
-	private static final int ADDR_ENDRANGE = 0xffff9020;
+	private static final int ADDR_ENDRANGE = 0xffff9050;
 
 	/** Address used to pop a point from the list */
 	public static final int ADDR_JUMPVALUE = 0xffff9000;
@@ -48,6 +48,13 @@ public class MARSScanner implements MarsTool, Observer
 	public static final int ADDR_NEXTX = 0xffff9010;
 	/** Address used to get the point to mark on Y axis */
 	public static final int ADDR_NEXTY = 0xffff9020;
+	
+	/** Address used to get the red color (0-255) from the EvoPoint */
+	public static final int ADDR_RCOLOR = 0xFFFF9030;
+	/** Address used to get the green color (0-255) from the EvoPoint */
+	public static final int ADDR_GCOLOR = 0xFFFF9040;
+	/** Address used to get the blue color (0-255) from the EvoPoint */
+	public static final int ADDR_BCOLOR = 0xFFFF9050;
 
 	public static ScannerRunnable sInstance;
 
@@ -65,7 +72,7 @@ public class MARSScanner implements MarsTool, Observer
 	 */
 	public static String getToolVersion() 
 	{
-		return "Rev 1.0";
+		return "v1.1";
 	}
 
 	/**
@@ -105,9 +112,12 @@ public class MARSScanner implements MarsTool, Observer
 					{
 						try 
 						{
-							Globals.memory.setWord(ADDR_NEXTX, sInstance.getTracePoints().get(0).x);
-							Globals.memory.setWord(ADDR_NEXTY, sInstance.getTracePoints().get(0).y);
-
+							Globals.memory.setWord(ADDR_NEXTX, (int) sInstance.getTracePoints().get(0).getPosition().getX());
+							Globals.memory.setWord(ADDR_NEXTY, (int) sInstance.getTracePoints().get(0).getPosition().getY());
+							Globals.memory.setWord(ADDR_RCOLOR, sInstance.getTracePoints().get(0).getColor().getRed());
+							Globals.memory.setWord(ADDR_GCOLOR, sInstance.getTracePoints().get(0).getColor().getGreen());
+							Globals.memory.setWord(ADDR_BCOLOR, sInstance.getTracePoints().get(0).getColor().getBlue());
+							
 							sInstance.getTracePoints().remove(0);
 						} 
 						catch (AddressErrorException e1) { e1.printStackTrace(); }

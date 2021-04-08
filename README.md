@@ -1,6 +1,8 @@
-# MARS Scanner Rev 1.0
+# MARS Scanner
 
-A [MARS](http://courses.missouristate.edu/KenVollmar/mars/) (MIPS Assembler and Runtime Simulator) tool to capture points on a JPEG image so that it can be transmitted through MMIO to the simulator. This data can be used to trace points using MARS Bot or to process image data using MIPS Assembly.
+A [MARS](http://courses.missouristate.edu/KenVollmar/mars/) (MIPS Assembler and Runtime Simulator) tool to capture points (both position and RGB color) on a JPEG image so that it can be transmitted through MMIO to the simulator. This data can be used to trace points using MARS Bot/[MARS Evo](https://github.com/luizsusin/MARS-Evo) or to process image data using MIPS Assembly.
+
+![MARS Scanner screenshot](https://i.imgur.com/2lut2wv.png)
 
 ## Getting Started
 
@@ -35,8 +37,7 @@ And you're good to go!
 ## Using the tool
 
 To use MARS Scanner, you must understand how MMIO (Memory Mapped I/O) works. In case you don't, I suggest you have some [reading](https://en.wikipedia.org/wiki/Memory-mapped_I/O) before proceeding.
-
-Once you understand how MMIO, take note of these informations:
+Once you understand how it works, take note of these informations:
 
 ### Addresses used by MARS Scanner
 
@@ -45,7 +46,10 @@ The addresses that MARS Scanner uses to communicate back and forth with MARS are
 ```
 * 0xFFFF9000 - Used to pop a point from the trace list;
 * 0xFFFF9010 - Used to communicate the next X coordinate of the point;
-* 0xFFFF9020 - Used to communicate the next Y coordinate of the point.
+* 0xFFFF9020 - Used to communicate the next Y coordinate of the point;
+* 0xFFFF9030 - Used to communicate the next R-channel value of the point;
+* 0xFFFF9040 - Used to communicate the next G-channel value of the point;
+* 0xFFFF9050 - Used to communicate the next B-channel value of the point;
 ```
 
 ### Popping a point from the trace list
@@ -59,8 +63,8 @@ Once you have already used the last point, you get to move to the next one. To d
 .text
     li $s0,0xFFFF9000
     li $t0,1
-    sw $t0,0($s0) #Send a high pulse
-    sw $zero,0($s0) #Turn back to low
+    sw $t0,0($s0) # Send a high pulse
+    sw $zero,0($s0) # Turn back to low
 ```
 
 ### Reading the point from the memory
@@ -72,11 +76,11 @@ To read the point from the memory, you need to access the X and Y coordinates. T
 
 .data
 .text
-    li $s0,0xFFFF9010 #Defines the $s0 registrator with the X coordinate address
-    li $s1,0xFFFF9020 #Defines the $s1 registrator with the Y coordinate address
+    li $s0,0xFFFF9010 # Defines the $s0 registrator with the X coordinate address
+    li $s1,0xFFFF9020 # Defines the $s1 registrator with the Y coordinate address
     
-    lw $t0,0($s0) #Loads the X coordinate inside the $t0 registrator
-    lw $t1,0($s1) #Loads the Y coordinate inside the $t1 registrator
+    lw $t0,0($s0) # Loads the X coordinate inside the $t0 registrator
+    lw $t1,0($s1) # Loads the Y coordinate inside the $t1 registrator
 ```
 
 ### How to detect that the image is fully iterated?
@@ -88,13 +92,13 @@ Once there'll never be a negative point, to detect if all the points have been r
 
 .data
 .text
-    li $s0,0xFFFF9010 #Defines the $s0 registrator with the X coordinate address
+    li $s0,0xFFFF9010 # Defines the $s0 registrator with the X coordinate address
     
     loop:
         # Iterate here...
         
-        lw $t0,0($s0) #Loads the X coordinate inside the $t0 registrator
-    bgez $t0,loop #Branch to the label 'loop' if $t0 is greater than or equals to zero, so it will keep iterating
+        lw $t0,0($s0) # Loads the X coordinate inside the $t0 registrator
+    bgez $t0,loop # Branch to the label 'loop' if $t0 is greater than or equals to zero, so it will keep iterating
 ```
 
 ## Authors
@@ -107,5 +111,4 @@ This project is licensed under the GNU General Public License version 3 - see th
 
 ## TO DO List
 
-* Add more examples;
-* Add color reading (RGB)
+* Nothing for now! Be free to suggest me something new.

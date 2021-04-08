@@ -34,7 +34,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -52,6 +51,7 @@ import javax.swing.text.NumberFormatter;
 import mars.Globals;
 import mars.mips.hardware.AddressErrorException;
 import mars.tools.MARSScanner;
+import mars.tools.marsscanner.util.EvoPoint;
 import mars.tools.marsscanner.util.Orientation;
 
 /**
@@ -63,10 +63,10 @@ public class ScannerRunnable extends JFrame implements Runnable
 {
 	private static final long serialVersionUID = 2512752452188107581L;
 
-	/** Default MARS Bot workspace width */
-	private static final int GRAPHIC_WIDTH = 696;
-	/** Default MARS Bot workspace height */
-	private static final int GRAPHIC_HEIGHT = 512;
+	/** Default MARS Evo workspace width */
+	private static final int GRAPHIC_WIDTH = 512;
+	/** Default MARS Evo workspace height */
+	private static final int GRAPHIC_HEIGHT = 480;
 
 	private JPanel contentPane;
 
@@ -77,7 +77,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 	private static BufferedImage image = null;
 	
 	/** Trace points list to send to MARS MMIO */
-	private static List<Point> tracePoints = new ArrayList<Point>();
+	private static List<EvoPoint> tracePoints = new ArrayList<EvoPoint>();
 
 	private static ScannerRunnable instance;
 
@@ -86,10 +86,10 @@ public class ScannerRunnable extends JFrame implements Runnable
 	 */
 	public ScannerRunnable() throws Exception 
 	{
-		setTitle("MARS Scanner");
+		setTitle("MARS Scanner " + MARSScanner.getToolVersion());
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		setBounds(100, 100, 290, 297);
+		setBounds(100, 100, 300, 284);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -111,7 +111,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 		JButton btnCalculateAndSend = new JButton("Calculate and Send");
 		btnCalculateAndSend.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnCalculateAndSend.setEnabled(false);
-		btnCalculateAndSend.setBounds(10, 197, 264, 23);
+		btnCalculateAndSend.setBounds(10, 174, 264, 23);
 		contentPane.add(btnCalculateAndSend);
 
 		final JFileChooser fChooser = new JFileChooser();
@@ -122,12 +122,6 @@ public class ScannerRunnable extends JFrame implements Runnable
 		btnOpenFile.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnOpenFile.setBounds(116, 42, 158, 23);
 		contentPane.add(btnOpenFile);
-
-		JCheckBox chkInvert = new JCheckBox("Inverse Scan (Mark point when RGB > 245)");
-		chkInvert.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		chkInvert.setHorizontalAlignment(SwingConstants.CENTER);
-		chkInvert.setBounds(10, 167, 264, 23);
-		contentPane.add(chkInvert);
 
 		JLabel lblHorizontalSize = new JLabel("Horizontal Size [X]:");
 		lblHorizontalSize.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -193,20 +187,20 @@ public class ScannerRunnable extends JFrame implements Runnable
 
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setForeground(Color.GRAY);
-		separator_1.setBounds(0, 228, 290, 5);
+		separator_1.setBounds(0, 205, 290, 5);
 		contentPane.add(separator_1);
 
-		JLabel lblMarsScannerCredits = new JLabel("MARS Scanner [" + MARSScanner.getToolVersion() + "]");
+		JLabel lblMarsScannerCredits = new JLabel("MARS Scanner " + MARSScanner.getToolVersion());
 		lblMarsScannerCredits.setForeground(Color.BLACK);
 		lblMarsScannerCredits.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMarsScannerCredits.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
-		lblMarsScannerCredits.setBounds(10, 233, 264, 14);
+		lblMarsScannerCredits.setBounds(10, 210, 264, 14);
 		contentPane.add(lblMarsScannerCredits);
 
 		JLabel lblCredits = new JLabel("<html>Developed by Luiz H. Susin (<a href=\"https://github.com/luizsusin\" target=\"_blank\">@luizsusin</a>)</html>");
 		lblCredits.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblCredits.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCredits.setBounds(10, 248, 264, 16);
+		lblCredits.setBounds(10, 225, 264, 16);
 		contentPane.add(lblCredits);
 
 		btnOpenFile.addActionListener(new ActionListener() 
@@ -265,57 +259,42 @@ public class ScannerRunnable extends JFrame implements Runnable
 
 					for (int y = 0; y < image.getHeight(); y++) 
 					{
-						for (int x = 0; x < image.getWidth(); x++) 
+						for (int x = 0; x < image.getWidth(); x++)
 						{
 							Color cPx = new Color(image.getRGB(x, y));
-
-							if (chkInvert.isSelected()) 
-							{
-								if (cPx.getBlue() >= 245 && cPx.getGreen() >= 245 && cPx.getRed() >= 245)
-									tracePoints.add(new Point(x + coefAligX, y + coefAligY));
-							} 
-							else 
-							{
-								if (cPx.getBlue() < 245 && cPx.getGreen() < 245 && cPx.getRed() < 245)
-									tracePoints.add(new Point(x + coefAligX, y + coefAligY));
-							}
+							
+							if(!cPx.equals(Color.WHITE))
+								tracePoints.add(new EvoPoint(new Point(x + coefAligX, y + coefAligY), cPx));
 						}
-
+						
 						if (y + 1 < image.getHeight()) 
 						{
 							y++;
 
-							for (int x = image.getWidth() - 1; x >= 0; x--) 
+							for (int x = image.getWidth() - 1; x >= 0; x--)
 							{
 								Color cPx = new Color(image.getRGB(x, y));
-
-								if (chkInvert.isSelected()) 
-								{
-									if (cPx.getBlue() >= 245 && cPx.getGreen() >= 245 && cPx.getRed() >= 245)
-										tracePoints.add(new Point(x + coefAligX, y + coefAligY));
-								} else 
-								{
-									if (cPx.getBlue() < 245 && cPx.getGreen() < 245 && cPx.getRed() < 245)
-										tracePoints.add(new Point(x + coefAligX, y + coefAligY));
-								}
+								
+								if(!cPx.equals(Color.WHITE))
+									tracePoints.add(new EvoPoint(new Point(x + coefAligX, y + coefAligY), cPx));
 							}
 						}
 					}
 
-					tracePoints.add(new Point(-1, -1));
+					tracePoints.add(new EvoPoint(new Point(-1, -1), Color.WHITE));
 
 					btnCalculateAndSend.setText("Sending...");
 
 					try 
 					{
-						Globals.memory.setWord(MARSScanner.ADDR_NEXTX, tracePoints.get(0).x);
-						Globals.memory.setWord(MARSScanner.ADDR_NEXTY, tracePoints.get(0).y);
+						Globals.memory.setWord(MARSScanner.ADDR_NEXTX, (int) tracePoints.get(0).getPosition().getX());
+						Globals.memory.setWord(MARSScanner.ADDR_NEXTY, (int) tracePoints.get(0).getPosition().getY());
 
 						tracePoints.remove(0);
 					} 
 					catch (AddressErrorException e1) { e1.printStackTrace(); }
 
-					btnCalculateAndSend.setText("Recalculate e Resend");
+					btnCalculateAndSend.setText("Recalculate and Resend");
 				}
 			}
 		});
@@ -334,7 +313,7 @@ public class ScannerRunnable extends JFrame implements Runnable
 	/**
 	 * @return The Trace Point List with all the points scanned and marked
 	 */
-	public List<Point> getTracePoints() 
+	public List<EvoPoint> getTracePoints() 
 	{
 		return tracePoints;
 	}
